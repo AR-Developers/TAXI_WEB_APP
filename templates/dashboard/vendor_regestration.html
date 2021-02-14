@@ -1,0 +1,58 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+{% block body %}
+            <div class="app-main__outer">
+                <div class="app-main__inner">
+                    <div class="app-page-title">
+                        <!-- <div class="page-title-wrapper"> -->
+                            <h1>Vendor Regestration</h1>
+                            <form method="POST">
+                                {% csrf_token %}
+                                <div class="form-group">
+                                  <label for="exampleInputEmail1">Organisation Name</label>
+                                  <input type="text" class="form-control" name="org_name" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter Organisation Name">
+                                </div>
+                                <div class="form-group">
+                                  <label for="exampleInputPassword1">Vendor Name</label>
+                                  <input type="text" class="form-control" name="per_name" id="exampleInputPassword1" placeholder="Enter Vendor Name">
+                                </div>
+                                <div class="form-group">
+                                    <label for="exampleInputPassword1">Vendor Email</label>
+                                    <input type="email" class="form-control" name="org_email" id="exampleInputPassword1" placeholder="Enter Vendor Email">
+                                </div>
+                                <div class="form-group">
+                                    <label for="exampleInputPassword1">Vendor Mobile</label>
+                                    <input type="number" class="form-control" name="org_phone" id="exampleInputPassword1" placeholder="Enter Vendor Mobile">
+                                </div>
+                                <div class="form-group">
+                                    <label for="exampleInputPassword1">Address 1</label>
+                                    <input type="text" class="form-control" name="add1" id="exampleInputPassword1" placeholder="1234 main street">
+                                </div>
+                                <div class="form-group">
+                                    <label for="exampleInputPassword1">Address 2</label>
+                                    <input type="text" class="form-control" name="add2" id="exampleInputPassword1" placeholder="near Denmark Hospital">
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group col-md-6">
+                                      <label for="inputCity">City</label>
+                                      <input type="text" name="city" class="form-control" id="inputCity">
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                      <label for="inputState">State</label>
+                                      <input type="text" name="state" class="form-control" id="inputCity">
+                                    </div>
+                                    <div class="form-group col-md-2">
+                                      <label for="inputZip">Pincode</label>
+                                      <input type="number" name="pincode" class="form-control" id="inputZip">
+                                    </div>
+                                  </div>
+                                
+                                <button type="submit" class="btn btn-primary">Submit</button>
+                              </form>
+                            
+                        <!--  </div> -->
+                    </div> 
+                    
+                </div>
+            </div>
+                {% endblock %}
