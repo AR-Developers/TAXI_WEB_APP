@@ -22,6 +22,7 @@ from account.views import (
     logout_view,
     details,
     vendor_reg,
+    get_latlon,
 
 )
 
@@ -33,4 +34,5 @@ urlpatterns = [
     path('details/', details, name="details"),
     path('login/', login_view, name="login"),
     path('logout/', logout_view, name="logout"),
+    path('lat/', get_latlon, name="get_latlon"),
 ]

@@ -2,7 +2,8 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
-
+import json
+import requests
 from .models import VendorAccount
 
 from .forms import RegistrationForm, AccountAuthenticationForm
@@ -88,6 +89,12 @@ def details(request):
 
 def vendor_reg(request):
     if request.method == "POST":
+        send_url = "http://api.ipstack.com/check?access_key=f78b7a305665b6a034589df60c5b9ec1"
+        geo_req = requests.get(send_url)
+        geo_json = json.loads(geo_req.text)
+        latitude = geo_json['latitude']
+        longitude = geo_json['longitude']
+        print(latitude, longitude)
         obj = VendorAccount()
         obj.org_name = request.POST.get('org_name')
         obj.per_name = request.POST.get('per_name')
@@ -98,6 +105,8 @@ def vendor_reg(request):
         obj.state = request.POST.get('state')
         obj.city = request.POST.get('city')
         obj.pincode = request.POST.get('pincode')
+        obj.lat = latitude
+        obj.lon = longitude
         # obj.context = {
         #     'org_name': org_name,
         #     'per_name': per_name,
@@ -114,3 +123,12 @@ def vendor_reg(request):
         return render(request, 'dashboard/vendor_regestration.html')
     else:
         return render(request, 'dashboard/vendor_regestration.html')
+
+def get_latlon(request):
+    send_url = "http://api.ipstack.com/check?access_key=f78b7a305665b6a034589df60c5b9ec1"
+    geo_req = requests.get(send_url)
+    geo_json = json.loads(geo_req.text)
+    latitude = geo_json['latitude']
+    longitude = geo_json['longitude']
+    print(latitude, longitude)
+    return HttpResponse("Hello Welcome Home!!!!")
