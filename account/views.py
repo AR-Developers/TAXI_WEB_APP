@@ -2,16 +2,15 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 import json
 import requests
-from .models import VendorAccount
+from .models import Account, VendorAccount, Profile
 
 from .forms import RegistrationForm, AccountAuthenticationForm
 
 def register_view(request, *args, **kwargs):
-	user = request.user
-	if user.is_authenticated: 
-		return HttpResponse("You are already authenticated as " + str(user.email))
+	user = request.user        
 
 	context = {}
 	if request.POST:
@@ -34,9 +33,13 @@ def register_view(request, *args, **kwargs):
 		context['registration_form'] = form
 	return render(request, 'account/register.html', context)
 
+
 @login_required(login_url='login')
 def home(request):
-    return render(request, 'dashboard/index.html')
+    if request.user.is_superuser:
+        return render(request, 'dashboard/index.html')
+    else:
+        return HttpResponse("<h1>Hii ordinary User</h1>")
 
 def login_view(request, *args, **kwargs):
     context = {}
@@ -132,3 +135,41 @@ def get_latlon(request):
     longitude = geo_json['longitude']
     print(latitude, longitude)
     return HttpResponse("Hello Welcome Home!!!!")
+
+def profile_update(request):
+    context = {}
+    data = Profile.objects.get(user__id=request.user.id)
+    context['data'] = data
+    if request.method == 'POST':
+        org_name = request.POST['org_name']
+        ven_name = request.POST['ven_name']
+        ven_email = request.POST['ven_email']
+        ven_phone = request.POST['ven_phone']
+        add = request.POST['add']
+        state = request.POST['state']
+        city = request.POST['city']
+        pincode = request.POST['pincode']
+        
+        user = Account.objects.get(id = request.user.id)
+        user.save()
+
+        data.org_name = org_name
+        data.ven_name = ven_name
+        data.ven_email = ven_email
+        data.ven_phone = ven_phone
+        data.add = add
+        data.state = state
+        data.city = city
+        data.pincode = pincode
+
+        data.save()
+
+        context['status'] = "Saved Successfully"
+    return render(request, 'dashboard/profile.html')
+
+def vendor_profile(request):
+    pro = Profile.objects.all()
+    context = {
+        "pro": pro
+    }
+    return render(request, 'dashboard/vendor_pro.html', context)

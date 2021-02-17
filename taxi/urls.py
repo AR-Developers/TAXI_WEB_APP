@@ -23,6 +23,8 @@ from account.views import (
     details,
     vendor_reg,
     get_latlon,
+    profile_update,
+    vendor_profile
 
 )
 
@@ -30,9 +32,11 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('register/', register_view, name="register"),
     path('', home, name="home"),
+    path('profile/', profile_update, name="profile"),
     path('vendor_regestration/', vendor_reg, name='vendor-regestration'),
     path('details/', details, name="details"),
     path('login/', login_view, name="login"),
     path('logout/', logout_view, name="logout"),
     path('lat/', get_latlon, name="get_latlon"),
+    path('vendor_profile/', vendor_profile, name="vendor_profile"),
 ]

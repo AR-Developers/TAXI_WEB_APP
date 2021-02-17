@@ -1,8 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, User
-from datetime import datetime
-
-from django.db.models.expressions import Value
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 class MyAccountManager(BaseUserManager):
 
@@ -75,3 +74,31 @@ class VendorAccount(models.Model):
 
     def __str__(self):
         return self.org_name
+
+class Profile(models.Model):
+    user = models.OneToOneField(Account, on_delete=models.CASCADE)
+    org_name = models.CharField(max_length=256)
+    ven_name = models.CharField(max_length=256)
+    ven_email = models.EmailField(unique=True, max_length=256)
+    ven_phone = models.IntegerField()
+    add = models.TextField()
+    state = models.CharField(max_length=256)
+    city = models.CharField(max_length=256)
+    pincode = models.IntegerField()
+    lat = models.DecimalField(max_digits=40, null=True, blank=True, decimal_places=10)
+    lon = models.DecimalField(max_digits=40, null=True, blank=True, decimal_places=10)
+    value = models.BooleanField(default=False)
+    is_paid = models.BooleanField(default=False)
+    updated_on = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.org_name
+
+@receiver(post_save, sender=Account)
+def create_user_profile(sender, instance, created, **kwargs):
+    if created:
+        Profile.objects.create(user=instance)
+
+@receiver(post_save, sender=Account)
+def save_user_profile(sender, instance, **kwargs):
+    instance.profile.save()
